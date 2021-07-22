@@ -1,3 +1,5 @@
+const { blueGray } = require('tailwindcss/colors')
+
 module.exports = {
     purge: [
         './app/Views/**/*.php',
@@ -6,7 +8,11 @@ module.exports = {
     ],
     darkMode: false,
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                blueGray,
+            }
+        },
     },
     variants: {
         extend: {},
