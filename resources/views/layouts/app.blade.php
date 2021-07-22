@@ -10,8 +10,11 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
+        <!-- Styles -->
         <link rel="stylesheet" href="{{ asset(mix('dist/app.css')) }}">
         <livewire:styles />
+
+        <script src="{{ asset(mix('dist/alpine.js')) }}" defer></script>
     </head>
     <body class="bg-blueGray-50 antialiased font-sans">
         {{ $slot }}
