@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ asset(mix('dist/app.css')) }}">
         <livewire:styles />
 
+        <wireui:scripts />
         <script src="{{ asset(mix('dist/alpine.js')) }}" defer></script>
     </head>
     <body class="bg-blueGray-50 antialiased font-sans">
