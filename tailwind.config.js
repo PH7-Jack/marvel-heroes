@@ -1,4 +1,4 @@
-const { blueGray } = require('tailwindcss/colors')
+const { blueGray, red } = require('tailwindcss/colors')
 
 module.exports = {
     presets: [
@@ -17,9 +17,13 @@ module.exports = {
         extend: {
             colors: {
                 blueGray,
+                primary: red
             },
             boxShadow: {
                 'soft': '3px 3px 16px #446b8d33'
+            },
+            fontSize: {
+                '2xs': '.5rem'
             },
         },
     },
