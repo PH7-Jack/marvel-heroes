@@ -17,7 +17,7 @@ use Livewire\Component;
  */
 class Index extends Component
 {
-    public const LIMIT = 20;
+    public const LIMIT = 18;
 
     public const ORDER_BY = Characters::ORDER_BY_NAME;
 
