@@ -2,27 +2,21 @@
 
 namespace App\Providers;
 
+use App\Contracts\Integrations\Heroes\Characters;
+use App\Integrations\Heroes\Marvel;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+    public array $bindings = [
+        Characters::class => Marvel\Characters::class,
+    ];
+
     public function register()
     {
-        //
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot()
     {
-        //
     }
 }
