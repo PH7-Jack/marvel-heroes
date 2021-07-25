@@ -17,5 +17,5 @@ It's a small proof of what can be done using laravel + livewire, a powerful tool
 4. Configure laravel [cache driver](https://laravel.com/docs/8.x/cache)
 5. Run `composer install`
 6. Run `php artisan key:generate`
-7. Run `yarn dev` to compile assets
+7. Run `yarn && yarn dev` to compile assets
 8. Run `php artisan serve` to start server
