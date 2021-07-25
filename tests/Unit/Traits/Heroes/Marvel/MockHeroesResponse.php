@@ -16,6 +16,7 @@ trait MockHeroesResponse
     {
         $response = [
             'data' => [
+                'total'   => 20,
                 'results' => $this->getCharactersFakeData(),
             ],
         ];

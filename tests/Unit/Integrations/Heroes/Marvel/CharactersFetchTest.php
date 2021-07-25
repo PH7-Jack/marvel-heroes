@@ -37,9 +37,9 @@ class CharactersFetchTest extends TestCase
 
         $characters = $this->fetcher->get();
 
-        $this->assertEquals(20, $characters->count());
+        $this->assertEquals(20, $characters->items()->count());
 
-        $characters->map(function (Character $character) {
+        $characters->items()->map(function (Character $character) {
             $this->assertTrue((bool)$character->getId());
             $this->assertTrue((bool)$character->getName());
             $this->assertTrue((bool)$character->getDescription());

@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Heroes;
 
-use App\Contracts\Integrations\Heroes\{Characters, Client};
+use App\Contracts\Integrations\Heroes\{Characters, Client, Response};
 use App\Facades\HeroesClient;
 use App\Support\Paginator;
 use Illuminate\Support\Facades\Cache;
@@ -10,12 +10,15 @@ use Illuminate\Support\{Collection, Str};
 use Livewire\Component;
 
 /**
- * @property-read Collection $characters
+ * @property-read Response $characters
  * @property-read Collection $paginationLinks
  * @property-read array $orderDirections
+ * @property-read int $maxPages
  */
 class Index extends Component
 {
+    public const LIMIT = 20;
+
     public const ORDER_BY = Characters::ORDER_BY_NAME;
 
     public string $orderDirection = Client::ORDER_ASC;
@@ -37,6 +40,21 @@ class Index extends Component
         return view('livewire.heroes.index');
     }
 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedOrderDirection(): void
+    {
+        $this->resetPage();
+    }
+
+    private function resetPage()
+    {
+        $this->page = 1;
+    }
+
     public function setPage(int $page): void
     {
         $this->page = $page;
@@ -52,7 +70,7 @@ class Index extends Component
         $this->page++;
     }
 
-    public function getCharactersProperty(): Collection
+    public function getCharactersProperty(): Response
     {
         return Cache::remember(
             $this->getQueryCacheKey(),
@@ -61,6 +79,7 @@ class Index extends Component
                 return HeroesClient::characters()
                     ->orderBy(self::ORDER_BY)
                     ->orderDirection($this->orderDirection)
+                    ->limit(self::LIMIT)
                     ->search($this->search)
                     ->page($this->page)
                     ->get();
@@ -84,12 +103,17 @@ class Index extends Component
     public function getPaginationLinksProperty(): Collection
     {
         $paginator = new Paginator(
-            total: 1000,
-            perPage: 20,
+            total: $this->characters->total(),
+            perPage: self::LIMIT,
             currentPage: $this->page,
             options: ['onEachSide' => 0]
         );
 
         return $paginator->links();
+    }
+
+    public function getMaxPagesProperty(): int
+    {
+        return ceil($this->characters->total() / self::LIMIT);
     }
 }

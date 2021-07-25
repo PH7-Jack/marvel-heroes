@@ -2,16 +2,13 @@
 
 namespace App\Contracts\Integrations\Heroes;
 
-use Illuminate\Support\Collection;
-
 interface Characters
 {
     public const ORDER_BY_NAME = 'name';
 
     public function find(int $id): ?Character;
 
-    /** @return Collection|Character[] */
-    public function get(): Collection;
+    public function get(): Response;
 
     public function getLimit(): int;
 

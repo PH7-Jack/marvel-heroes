@@ -25,13 +25,17 @@ class Characters implements Heroes\Characters
         return Character::find($id);
     }
 
-    public function get(): Collection
+    public function get(): Heroes\Response
     {
         $response = Http::get($this->getUrl())->throw()->json();
 
-        return $this->formatResults(
+        $total = data_get($response, 'data.total');
+
+        $items = $this->formatResults(
             data_get($response, 'data.results', [])
         );
+
+        return new Response($items, $total);
     }
 
     private function formatResults(array $characters): Collection

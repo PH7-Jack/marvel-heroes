@@ -33,6 +33,7 @@ class ListingHeroesTest extends TestCase
 
         $response = [
             'data' => [
+                'total'   => 1,
                 'results' => $characters,
             ],
         ];

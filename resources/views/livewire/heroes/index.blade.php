@@ -10,6 +10,7 @@
                     <x-input
                         class="h-10 pl-10"
                         wire:model.debounce.750ms="search"
+                        type="search"
                         icon="search"
                         borderless
                         shadowless
@@ -38,8 +39,7 @@
                     <div class="animate-pulse relative w-full h-56 md:h-64 bg-white
                                 shadow-soft border border-primary-100 rounded-lg"
                         wire:key="loading.{{ $i }}"
-                        wire:loading
-                        >
+                        wire:loading>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <x-icons.spinner class="w-6 h-6 text-primary-200" />
                         </div>
@@ -47,7 +47,7 @@
                 @endfor
 
                 @if ($loaded)
-                    @forelse ($this->characters as $character)
+                    @forelse ($this->characters->items() as $character)
                         <x-button
                             class="!p-0 text-left"
                             wire:key="characters.{{ $character->getId() }}"
@@ -73,16 +73,18 @@
                             </div>
                         </x-button>
                     @empty
-                        <div class="col-span-2 text-center pt-16 pb-8 text-primary-400">
-                            <x-icons.spider class="w-32 h-32 mx-auto" />
+                        <div class="col-span-2 sm:col-span-3 pt-16 pb-8 text-primary-400">
+                            <div class="flex flex-col items-center justify-center">
+                                <x-icons.spider class="w-32 h-32 sm:w-44 sm:h-44" />
 
-                            <p class="text-xs">
-                                @lang('Empty Characters')
-                            </p>
+                                <p class="text-xs sm:text-lg">
+                                    @lang('Empty Characters')
+                                </p>
+                            </div>
                         </div>
                     @endforelse
 
-                    @if ($this->characters->isNotEmpty())
+                    @if ($this->characters->items()->isNotEmpty())
                         <div wire:key="pagination.links" class="col-span-2 sm:col-span-3 mt-4">
                             <div class="flex gap-x-1 items-center justify-center">
                                 <x-button
@@ -114,7 +116,7 @@
                                 @endforeach
 
                                 <x-button
-                                    :disabled="$page === $this->characters->count()"
+                                    :disabled="$page === $this->maxPages"
                                     icon="chevron-right"
                                     wire:click="nextPage"
                                     rounded
