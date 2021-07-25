@@ -17,7 +17,7 @@
         <wireui:scripts />
         <script src="{{ asset(mix('dist/alpine.js')) }}" defer></script>
     </head>
-    <body class="bg-blueGray-50 antialiased font-sans">
+    <body class="bg-primary-50 bg-opacity-80 antialiased font-sans">
         {{ $slot }}
 
         <livewire:scripts />
