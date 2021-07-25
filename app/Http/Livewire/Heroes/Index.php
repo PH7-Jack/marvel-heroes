@@ -4,7 +4,8 @@ namespace App\Http\Livewire\Heroes;
 
 use App\Contracts\Integrations\Heroes\{Characters, Client};
 use App\Facades\HeroesClient;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\{Collection, Str};
 use Livewire\Component;
 
 /**
@@ -36,12 +37,23 @@ class Index extends Component
 
     public function getCharactersProperty(): Collection
     {
-        return HeroesClient::characters()
-            ->orderBy(self::ORDER_BY)
-            ->orderDirection($this->orderDirection)
-            ->search($this->search)
-            ->page($this->page)
-            ->get();
+        return Cache::remember(
+            $this->getQueryCacheKey(),
+            $seconds = 60,
+            function () {
+                return HeroesClient::characters()
+                    ->orderBy(self::ORDER_BY)
+                    ->orderDirection($this->orderDirection)
+                    ->search($this->search)
+                    ->page($this->page)
+                    ->get();
+            }
+        );
+    }
+
+    private function getQueryCacheKey(): string
+    {
+        return Str::slug("{$this->page}.{$this->orderDirection}.{$this->search}");
     }
 
     public function getOrderDirectionsProperty(): array

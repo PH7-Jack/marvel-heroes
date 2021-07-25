@@ -5,7 +5,7 @@ namespace App\Integrations\Heroes\Marvel;
 use App\Contracts\Integrations\Heroes;
 use App\Exceptions\Heroes\CharacterNotFound;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\{Cache, Http};
 
 class Character implements Heroes\Character
 {
@@ -33,15 +33,17 @@ class Character implements Heroes\Character
 
     public static function findOrFail(int $id): self
     {
-        $url = (new MarvelApi())->to(Characters::API . "/{$id}");
+        return Cache::remember("marvel.heroes.{$id}", 60 * 60, function () use ($id) {
+            $url = (new MarvelApi())->to(Characters::API . "/{$id}");
 
-        $response = Http::get($url)->throw()->json();
+            $response = Http::get($url)->throw()->json();
 
-        $character = data_get($response, 'data.results.0', false);
+            $character = data_get($response, 'data.results.0', false);
 
-        throw_unless($character, new CharacterNotFound($id));
+            throw_unless($character, new CharacterNotFound($id));
 
-        return (new static($character));
+            return (new static($character));
+        });
     }
 
     public static function find(int $id): ?self
