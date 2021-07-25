@@ -23,6 +23,12 @@ class Index extends Component
 
     public bool $loaded = false;
 
+    protected $queryString = [
+        'search',
+        'page'           => ['except' => 1],
+        'orderDirection' => ['except' => Client::ORDER_ASC],
+    ];
+
     public function render()
     {
         return view('livewire.heroes.index');
