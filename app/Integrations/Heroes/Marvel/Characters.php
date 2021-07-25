@@ -8,7 +8,7 @@ use Illuminate\Support\{Arr, Collection, Str, Stringable};
 
 class Characters implements Heroes\Characters
 {
-    private const API = 'characters';
+    public const API = 'characters';
 
     private ?string $search = null;
 
@@ -19,6 +19,11 @@ class Characters implements Heroes\Characters
     private int $limit = 20;
 
     private int $page = 1;
+
+    public function find(int $id): ?Heroes\Character
+    {
+        return Character::find($id);
+    }
 
     public function get(): Collection
     {
