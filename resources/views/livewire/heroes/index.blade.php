@@ -1,11 +1,11 @@
 <div wire:init="$set('loaded', true)">
-    <div class="relative flex items-top justify-center min-h-screen sm:items-center py-4 sm:py-8">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-4 sm:py-8">
+        <div class="w-full sm:max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-center pt-4">
                 <x-logo class="h-20 rounded-lg shadow-md" />
             </div>
 
-            <div class="flex items-center justify-between px-2 mt-8 sm:max-w-xs sm:mx-auto">
+            <div class="flex items-center justify-between px-2 mt-8 mb-2 sm:max-w-xs sm:mx-auto">
                 <div class="overflow-hidden rounded-full shadow mr-3">
                     <x-input
                         class="h-10 pl-10"
@@ -33,14 +33,15 @@
                 </x-dropdown>
             </div>
 
-            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 lg:gap-5 p-2">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 lg:gap-5 p-2">
                 @for ($i = 0; $i < 9; $i++)
-                    <div class="animate-pulse relative w-full md:w-56 h-48 md:h-56 lg:h-64 bg-white
-                                shadow-soft border border-gray-100 rounded-lg"
+                    <div class="animate-pulse relative w-full h-56 md:h-64 bg-white
+                                shadow-soft border border-primary-100 rounded-lg"
                         wire:key="loading.{{ $i }}"
-                        wire:loading>
+                        wire:loading
+                        >
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <x-icons.spinner class="w-6 h-6 text-gray-200" />
+                            <x-icons.spinner class="w-6 h-6 text-primary-200" />
                         </div>
                     </div>
                 @endfor
@@ -56,16 +57,16 @@
                             "
                             flat
                             primary>
-                            <div class="overflow-hidden w-full h-full bg-white shadow-soft border border-gray-100 rounded-lg">
+                            <div class="overflow-hidden w-full h-full bg-white shadow-soft border border-primary-100 rounded-lg">
                                 <img
-                                    class="object-fill h-48 md:h-56 lg:h-64 w-full"
+                                    class="object-fill w-full h-48 md:h-64"
                                     src="{{ $character->getThumbnail() }}"
                                     alt="{{ $character->getName() }}"
                                     title="{{ $character->getName() }}"
                                 />
 
-                                <div class="p-2 flex flex-col">
-                                    <h3 class="truncate text-md text-gray-700" title="{{ $character->getName() }}">
+                                <div class="p-1 flex flex-col">
+                                    <h3 class="truncate text-md text-primary-700" title="{{ $character->getName() }}">
                                         {{ $character->getName() }}
                                     </h3>
                                 </div>
@@ -80,6 +81,49 @@
                             </p>
                         </div>
                     @endforelse
+
+                    @if ($this->characters->isNotEmpty())
+                        <div wire:key="pagination.links" class="col-span-2 sm:col-span-3 mt-4">
+                            <div class="flex gap-x-1 items-center justify-center">
+                                <x-button
+                                    :disabled="$page === 1"
+                                    icon="chevron-left"
+                                    wire:click="previousPage"
+                                    rounded
+                                    primary
+                                    flat
+                                />
+
+                                @foreach ($this->paginationLinks as $link)
+                                    @if (is_numeric($link['label']))
+                                        <x-button
+                                            class="h-6 w-6 md:h-8 md:w-8"
+                                            :label="$link['label']"
+                                            :disabled="$link['label'] == $page"
+                                            :flat="! $link['active']"
+                                            :outline="$link['active']"
+                                            wire:click="setPage({{ $link['label'] }})"
+                                            rounded
+                                            primary
+                                        />
+                                    @else
+                                        <a class="text-sm font-medium text-primary-500">
+                                            {{ $link['label'] }}
+                                        </a>
+                                    @endif
+                                @endforeach
+
+                                <x-button
+                                    :disabled="$page === $this->characters->count()"
+                                    icon="chevron-right"
+                                    wire:click="nextPage"
+                                    rounded
+                                    primary
+                                    flat
+                                />
+                            </div>
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>
@@ -87,5 +131,11 @@
 
     <div wire:ignore>
         <livewire:heroes.details-modal />
+    </div>
+
+    <div class="hidden" x-data="{ page: @entangle('page').defer }"
+        x-init="function() {
+            $watch('page', () => window.scrollTo({top: 0, behavior: 'smooth'}))
+        }">
     </div>
 </div>

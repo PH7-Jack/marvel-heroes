@@ -4,12 +4,14 @@ namespace App\Http\Livewire\Heroes;
 
 use App\Contracts\Integrations\Heroes\{Characters, Client};
 use App\Facades\HeroesClient;
+use App\Support\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\{Collection, Str};
 use Livewire\Component;
 
 /**
  * @property-read Collection $characters
+ * @property-read Collection $paginationLinks
  * @property-read array $orderDirections
  */
 class Index extends Component
@@ -33,6 +35,21 @@ class Index extends Component
     public function render()
     {
         return view('livewire.heroes.index');
+    }
+
+    public function setPage(int $page): void
+    {
+        $this->page = $page;
+    }
+
+    public function previousPage(): void
+    {
+        $this->page--;
+    }
+
+    public function nextPage(): void
+    {
+        $this->page++;
     }
 
     public function getCharactersProperty(): Collection
@@ -62,5 +79,17 @@ class Index extends Component
             Client::ORDER_ASC  => __('Ascending Order'),
             Client::ORDER_DESC => __('Descending Order'),
         ];
+    }
+
+    public function getPaginationLinksProperty(): Collection
+    {
+        $paginator = new Paginator(
+            total: 1000,
+            perPage: 20,
+            currentPage: $this->page,
+            options: ['onEachSide' => 0]
+        );
+
+        return $paginator->links();
     }
 }
