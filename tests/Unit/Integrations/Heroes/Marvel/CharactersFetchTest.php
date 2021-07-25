@@ -4,15 +4,14 @@ namespace Tests\Unit\Integrations\Heroes\Marvel;
 
 use App\Contracts\Integrations\Heroes\Character;
 use App\Integrations\Heroes\Marvel\Characters;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
+use Tests\Unit\Traits\Heroes\Marvel\MockHeroesResponse;
 
 class CharactersFetchTest extends TestCase
 {
-    use WithFaker;
+    use MockHeroesResponse;
 
     private Characters $fetcher;
 
@@ -46,40 +45,5 @@ class CharactersFetchTest extends TestCase
             $this->assertTrue((bool)$character->getDescription());
             $this->assertTrue((bool)$character->getThumbnail());
         });
-    }
-
-    private function fakeResponse(): PromiseInterface
-    {
-        return Http::response($this->getFakeResponseData(), status: 200);
-    }
-
-    private function getFakeResponseData(): array
-    {
-        $response = [
-            'data' => [
-                'results' => $this->getCharactersFakeData(),
-            ],
-        ];
-
-        return $response;
-    }
-
-    private function getCharactersFakeData(): array
-    {
-        $characters = [];
-
-        for ($i = 0; $i < 20; $i++) {
-            $characters[] = [
-                'id'          => $this->faker->randomNumber(3),
-                'name'        => $this->faker->name(),
-                'description' => $this->faker->text(50),
-                'thumbnail'   => [
-                    'path'      => 'marvel.thumbnail.url',
-                    'extension' => 'jpg',
-                ],
-            ];
-        }
-
-        return $characters;
     }
 }
