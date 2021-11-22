@@ -3,7 +3,7 @@
 This project was implemented using interfaces to be able to switch the character provider without breaking the system.
 It's a small proof of what can be done using laravel + livewire, a powerful tool.
 
-# Prerequisites
+# Pre Requisites
 
 -   PHP 8.0+
 -   Node 16+
